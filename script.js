@@ -1,19 +1,31 @@
 var currentDay = moment().format("dddd, MMMM Do")
 document.getElementById("currentDay").innerText = currentDay
+var currentHour = moment().hour()
 
 buildColumns("am")
 buildColumns("pm")
+
 
 function buildColumns(dayPart) {
     if (dayPart == "am") {
         var i = 9
         var loopLimit = 13
+        morning = true
+
     } else {
         var i = 1
         var loopLimit = 6
+        morning = false
     }
 
     for (i; i < loopLimit; i++) {
+
+        if (morning == true) {
+            var rowHour = i
+        } else {
+            var rowHour = i + 12
+        }
+
         row = document.createElement("div")
         row.setAttribute("class", "row")
         document.querySelector(".container").appendChild(row)
@@ -35,8 +47,7 @@ function buildColumns(dayPart) {
         // build user text input
         var input = document.createElement("textarea")
         input.setAttribute("class", "form-control")
-        inputId = `${i}` + dayPart
-        input.id = inputId
+        input.id = `${rowHour}`
         formColumn.appendChild(input)
 
         //build save button for row
@@ -46,11 +57,24 @@ function buildColumns(dayPart) {
 
         var saveButton = document.createElement("button")
         saveButton.setAttribute("class", "btn")
-        saveButton.setAttribute("onClick", "saveRow('" + `${inputId}` + "')")
+        saveButton.setAttribute("onClick", "saveRow('" + `${rowHour}` + "')")
         saveButton.innerHTML = '<i class="fas fa-save"></i>'
         saveColumn.appendChild(saveButton)
+
+        if (currentHour > rowHour) {
+            row.setAttribute("style", "background-color: gray;")
+            input.setAttribute("style", "background-color: gray;")
+        }
+        else if (currentHour == rowHour) {
+            row.setAttribute("style", "background-color: yellow;")
+            input.setAttribute("style", "background-color: yellow;")
+        } else {
+            row.setAttribute("style", "background-color: lightgreen;")
+            input.setAttribute("style", "background-color: lightgreen;")
+        }
     }
 }
+
 function saveRow(id) {
     console.log(id)
 }

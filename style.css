@@ -71,7 +71,8 @@ textarea{
 }
 
 .row {
-  height: 120px
+  height: 120px;
+
 }
 .col {
   border: 2px solid black;
@@ -91,17 +92,20 @@ textarea{
 .form-control{
   border: none;
   min-height: 100%;
+
 }
 
 .form-control:focus{
-  border: 2px solid lightblue
+  border: 2px solid lightblue;
+
 }
 
 .btn{
   padding: 0px;
   min-width: 100%;
+  background-color: lightblue;
 }
 
 .btn:hover{
-  border: 2px solid lightblue;
+  border: 2px solid blue;
 }
