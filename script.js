@@ -1,6 +1,11 @@
+// global variables
 var currentDay = moment().format("dddd, MMMM Do")
 document.getElementById("currentDay").innerText = currentDay
 var currentHour = moment().hour()
+var savedText= {}
+if (localStorage.savedText){
+    savedText = JSON.parse(localStorage.savedText)
+}
 
 buildColumns("am")
 buildColumns("pm")
@@ -48,6 +53,9 @@ function buildColumns(dayPart) {
         var input = document.createElement("textarea")
         input.setAttribute("class", "form-control")
         input.id = `${rowHour}`
+        if (savedText[rowHour]){
+            input.value= savedText[rowHour]
+        }
         formColumn.appendChild(input)
 
         //build save button for row
@@ -61,6 +69,7 @@ function buildColumns(dayPart) {
         saveButton.innerHTML = '<i class="fas fa-save"></i>'
         saveColumn.appendChild(saveButton)
 
+        // change colors of rows and text areas based on time of day
         if (currentHour > rowHour) {
             row.setAttribute("style", "background-color: gray;")
             input.setAttribute("style", "background-color: gray;")
@@ -76,5 +85,6 @@ function buildColumns(dayPart) {
 }
 
 function saveRow(id) {
-    console.log(id)
+    savedText[id]= document.getElementById(id).value
+    localStorage.savedText = JSON.stringify(savedText)
 }
