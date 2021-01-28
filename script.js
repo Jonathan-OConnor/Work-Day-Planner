@@ -2,8 +2,9 @@
 var currentDay = moment().format("dddd, MMMM Do")
 document.getElementById("currentDay").innerText = currentDay
 var currentHour = moment().hour()
-var savedText= {}
-if (localStorage.savedText){
+var savedText = {}
+var fadeClear = {}
+if (localStorage.savedText) {
     savedText = JSON.parse(localStorage.savedText)
 }
 
@@ -12,6 +13,7 @@ buildColumns("pm")
 
 
 function buildColumns(dayPart) {
+    // check for am or pm
     if (dayPart == "am") {
         var i = 9
         var loopLimit = 13
@@ -23,6 +25,7 @@ function buildColumns(dayPart) {
         morning = false
     }
 
+    // build the rows, uses slightly different logic for morning or afternoon
     for (i; i < loopLimit; i++) {
 
         if (morning == true) {
@@ -41,7 +44,7 @@ function buildColumns(dayPart) {
         row.appendChild(timeColumn)
 
         time = document.createElement("p")
-        time.innerHTML = `${i}` + dayPart
+        time.innerHTML = `${i} ` + dayPart
         timeColumn.appendChild(time)
 
         // build column for user text input
@@ -53,26 +56,28 @@ function buildColumns(dayPart) {
         var input = document.createElement("textarea")
         input.setAttribute("class", "form-control")
         input.id = `${rowHour}`
-        if (savedText[rowHour]){
-            input.value= savedText[rowHour]
+        if (savedText[rowHour]) {
+            input.value = savedText[rowHour]
         }
         formColumn.appendChild(input)
 
         //build save button for row
         var saveColumn = document.createElement("div")
         saveColumn.setAttribute("class", "col col-1 d-flex justify-content-center")
+
         row.appendChild(saveColumn)
 
         var saveButton = document.createElement("button")
         saveButton.setAttribute("class", "btn")
-        saveButton.setAttribute("onClick", "saveRow('" + `${rowHour}` + "')")
-        saveButton.innerHTML = '<i class="fas fa-save"></i>'
+        saveButton.setAttribute("onClick", `saveRow(${rowHour})`)
+        saveButton.id = `save-${rowHour}`
+        saveButton.innerHTML = '<i class="fas fa-save fa-2x"></i>'
         saveColumn.appendChild(saveButton)
 
         // change colors of rows and text areas based on time of day
         if (currentHour > rowHour) {
-            row.setAttribute("style", "background-color: gray;")
-            input.setAttribute("style", "background-color: gray;")
+            row.setAttribute("style", "background-color: lightgray;")
+            input.setAttribute("style", "background-color: lightgray;")
         }
         else if (currentHour == rowHour) {
             row.setAttribute("style", "background-color: yellow;")
@@ -85,6 +90,16 @@ function buildColumns(dayPart) {
 }
 
 function saveRow(id) {
-    savedText[id]= document.getElementById(id).value
+    // add text that confirms the contents have been saved. Restart animation if a previous iteration has not cleared.
+    if (!document.getElementById(`message-${id}`)){
+        document.getElementById(`save-${id}`).innerHTML += `<p class='fade-out' id=message-${id} >Saved!</p>`
+       
+    } else {
+        clearTimeout(fadeClear[id])
+        document.getElementById(`message-${id}`).remove()
+        document.getElementById(`save-${id}`).innerHTML += `<p class='fade-out' id=message-${id} >Saved!</p>`
+    }
+    fadeClear[id] = setTimeout(function () { document.getElementById(`message-${id}`).remove() }, 2000)
+    savedText[id] = document.getElementById(id).value
     localStorage.savedText = JSON.stringify(savedText)
 }
