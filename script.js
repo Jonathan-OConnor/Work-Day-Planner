@@ -43,6 +43,11 @@ function buildColumns(dayPart) {
         timeColumn.setAttribute("class", "col col-2 d-flex justify-content-center")
         row.appendChild(timeColumn)
         
+        // set 12 to pm instead of am 
+        if (i==12){
+             dayPart = "pm"
+            }
+
         // build the text for the time column
         time = document.createElement("p")
         time.innerHTML = `${i} ` + dayPart
