@@ -38,11 +38,12 @@ function buildColumns(dayPart) {
         row.setAttribute("class", "row")
         document.querySelector(".container").appendChild(row)
 
-        //build column to display times
+        // build column to display times
         timeColumn = document.createElement("div")
         timeColumn.setAttribute("class", "col col-2 d-flex justify-content-center")
         row.appendChild(timeColumn)
-
+        
+        // build the text for the time column
         time = document.createElement("p")
         time.innerHTML = `${i} ` + dayPart
         timeColumn.appendChild(time)
@@ -61,12 +62,12 @@ function buildColumns(dayPart) {
         }
         formColumn.appendChild(input)
 
-        //build save button for row
+        //build save button column for the row
         var saveColumn = document.createElement("div")
         saveColumn.setAttribute("class", "col col-1 d-flex justify-content-center")
-
         row.appendChild(saveColumn)
 
+        // build the save button for the save column
         var saveButton = document.createElement("button")
         saveButton.setAttribute("class", "btn")
         saveButton.setAttribute("onClick", `saveRow(${rowHour})`)
@@ -100,6 +101,8 @@ function saveRow(id) {
         document.getElementById(`save-${id}`).innerHTML += `<p class='fade-out' id=message-${id} >Saved!</p>`
     }
     fadeClear[id] = setTimeout(function () { document.getElementById(`message-${id}`).remove() }, 2000)
+
+    // update the saved contents in local storage
     savedText[id] = document.getElementById(id).value
     localStorage.savedText = JSON.stringify(savedText)
 }
